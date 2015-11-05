@@ -24,7 +24,6 @@ curses.noecho()
 curses.curs_set(0) 
 curses.resizeterm(45,90)
 curses.setsyx(45,90)
-screen.keypad(1)
 curses.start_color()
 curses.use_default_colors()
 curses.init_pair(1, curses.COLOR_RED, curses.COLOR_YELLOW)
@@ -33,6 +32,7 @@ curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_RED)
 curses.init_pair(4, curses.COLOR_RED, curses.COLOR_WHITE)
 curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_GREEN)
 curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_RED)
+screen.keypad(1)
 
 def init():
    global active, water, coffee, temp, total
@@ -50,20 +50,20 @@ def init():
 
 def clean_row():
    st_empty = "                            "
-   screen.addstr(_last_x,_last_y,st_empty) 
+   screen.addstr(_last_x,_last_y,st_empty, curses.A_REVERSE) 
 
 def process(element,quantity):
    global water, coffee, temp
    for i in range(quantity):
       if element == 'coffee':
          coffee = coffee - 1
-         screen.addch((_init-coffee),_init_coffee," ")
+         screen.addch((_init-coffee),_init_coffee," ", curses.A_REVERSE)
       elif element == 'water':
          water = water - 1
-         screen.addch((_init-water),_init_water," ")
+         screen.addch((_init-water),_init_water," ", curses.A_REVERSE)
       elif element == 'temperature':
          temp = temp - 1
-         screen.addch((_init-temp),_init_temp," ")
+         screen.addch((_init-temp),_init_temp," ", curses.A_REVERSE)
 
 def make_coffe():
    global coffee, water, temp, total
@@ -73,7 +73,7 @@ def make_coffe():
       process('water',_recipt_water)
       process('temperature',_recipt_temp)
       total = total + 1
-      screen.addstr(_total_x,_total_y,str(total))
+      screen.addstr(_total_x,_total_y, str(total), curses.A_REVERSE)
       curses.flash()
    else:
       if coffee < _recipt_coffee:
@@ -129,6 +129,6 @@ while True:
          with open('machine.txt') as inputfile:
             for i, line in enumerate(inputfile):
                machine=line.strip().split(',')
-               screen.addstr(i,0,machine[0])
+               screen.addstr(i,0,machine[0], curses.A_REVERSE)
 
 curses.endwin()
