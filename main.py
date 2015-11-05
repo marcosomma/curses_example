@@ -86,7 +86,7 @@ def make_coffe():
          clean_row()
          screen.addstr(_last_x,_last_y,"PLEASE ADD TEMPERATURE!", curses.color_pair(4)) 
 
-
+#Call init()
 init()
 
 while True:
