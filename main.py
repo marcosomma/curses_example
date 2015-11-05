@@ -10,15 +10,14 @@ _recipt_coffee = 1
 _recipt_water = 2
 _recipt_temp = 3
 _last_y = 13
+_last_x = 40
 _total_x = 38
 _total_y = 71
 
 coffee = 0
 water = 0
 temp = 0
-_last_x = 40
 total = 0
-active = False
 screen = curses.initscr() 
 
 curses.noecho() 
@@ -36,11 +35,12 @@ curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_GREEN)
 curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_RED)
 
 def init():
-   global water, coffee, temp, total
+   global active, water, coffee, temp, total
    coffee = 0
    water = 0
    temp = 0
    total = 0
+   active = False
    screen.clear()
    curses.flash()
    with open('init.txt') as inputfile:
@@ -95,7 +95,6 @@ while True:
    if active :
       clean_row()
       if event == ord("q"): 
-         active = False
          init()
       elif event == ord("c"):
          if coffee != _max_element:
