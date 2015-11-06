@@ -1,5 +1,6 @@
 import curses 
-import threading
+import draw 
+import control 
 
 _init = 11
 _max_element = 5
@@ -14,6 +15,7 @@ _last_x = 40
 _total_x = 38
 _total_y = 71
 
+active = False
 coffee = 0
 water = 0
 temp = 0
@@ -43,10 +45,7 @@ def init():
    active = False
    screen.clear()
    curses.flash()
-   with open('init.txt') as inputfile:
-      for i, line in enumerate(inputfile):
-         machine=line.strip().split(',')
-         screen.addstr(i,0,machine[0], curses.color_pair(6))
+   draw.main_screen(screen, curses.color_pair(6))
 
 def clean_row():
    st_empty = "                            "
@@ -74,7 +73,6 @@ def make_coffe():
       process('temperature',_recipt_temp)
       total = total + 1
       screen.addstr(_total_x,_total_y, str(total), curses.A_REVERSE)
-      curses.flash()
    else:
       if coffee < _recipt_coffee:
          clean_row()
@@ -86,49 +84,6 @@ def make_coffe():
          clean_row()
          screen.addstr(_last_x,_last_y,"PLEASE ADD TEMPERATURE!", curses.color_pair(4)) 
 
-#Call init()
 init()
-
-while True:
-   global active 
-   event = screen.getch() 
-   if active :
-      clean_row()
-      if event == ord("q"): 
-         init()
-      elif event == ord("c"):
-         if coffee != _max_element:
-            screen.addstr(_last_x,_last_y,"ADD COFFEE", curses.color_pair(1))
-            screen.addch((_init-coffee),_init_coffee," ", curses.color_pair(1))
-            coffee = coffee + 1
-         else:
-            screen.addstr(_last_x,_last_y,"COFFEE FULL!", curses.color_pair(4))
-      elif event == ord("w"): 
-         if water != _max_element:
-            screen.addstr(_last_x,_last_y,"ADD WATER", curses.color_pair(2)) 
-            screen.addch((_init-water),_init_water," ", curses.color_pair(2))
-            water = water + 1
-         else:
-            screen.addstr(_last_x,_last_y,"WATER FULL!", curses.color_pair(4))
-      elif event == ord("t"): 
-         if temp != _max_element: 
-            screen.addstr(_last_x,_last_y,"ADD TEMPERATURE", curses.color_pair(3)) 
-            screen.addch((_init-temp),_init_temp," ", curses.color_pair(3))
-            temp = temp + 1
-         else:
-            screen.addstr(_last_x,_last_y,"TEMPERATURE MAX!", curses.color_pair(4))
-      elif event == ord(" "): 
-         make_coffe()
-      else: 
-         screen.addstr(_last_x,_last_y,"ACTION NOT VALID!", curses.color_pair(4))
-   else:
-      if event == ord("q"): break
-      if event == ord(" "):
-         active = True
-         screen.clear()
-         with open('machine.txt') as inputfile:
-            for i, line in enumerate(inputfile):
-               machine=line.strip().split(',')
-               screen.addstr(i,0,machine[0], curses.A_REVERSE)
-
+control.set()
 curses.endwin()
