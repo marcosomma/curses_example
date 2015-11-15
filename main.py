@@ -48,7 +48,7 @@ def init():
    draw.main_screen(screen, curses.color_pair(6))
 
 def clean_row():
-   st_empty = "                            "
+   st_empty = "                                           "
    screen.addstr(_last_x,_last_y,st_empty, curses.A_REVERSE) 
 
 def process(element,quantity):
